@@ -11,11 +11,14 @@ fn part_1(input: &str) -> usize {
     let mut count: usize = 0;
 
     for line in input.lines() {
-        let c = line.chars().next().unwrap();
+        let direction = line.chars().next().unwrap();
         let mut distance: isize = line[1..].parse().unwrap();
 
-        if c == 'L' {
-            distance = distance * -1;
+        // Make everything a right turn
+        if direction == 'L' {
+            let rotations = distance / 100;
+            let offset = (rotations + 1) * 100;
+            distance = offset - distance;
         }
         dial += distance;
         dial = dial % 100;
@@ -35,17 +38,7 @@ fn part_2(input: &str) -> usize {
         let c = line.chars().next().unwrap();
         let mut distance: isize = line[1..].parse().unwrap();
 
-        if c == 'L' {
-            distance = distance * -1;
-        }
-        dial += distance;
-        let turns = (dial / 100).abs();
-        count += turns as usize;
-        dial = dial % 100;
-
-        if dial == 0 {
-            count += 1;
-        }
+        todo!();
     }
     count
 }
