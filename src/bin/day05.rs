@@ -57,7 +57,7 @@ fn part_2(input: &str) -> usize {
 
     condensed_ranges
         .into_iter()
-        .fold(0, |acc, range: Range| acc + range.max - range.min + 1)
+        .fold(0, |acc, range: Range| acc + range.max + 1 - range.min)
 }
 
 fn condense(range: Range, ranges: Vec<Range>) -> Vec<Range> {
