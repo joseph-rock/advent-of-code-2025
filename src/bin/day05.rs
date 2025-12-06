@@ -1,12 +1,4 @@
-fn main() {
-    let input: &str = include_str!("./day05.txt");
-    let pt1 = part_1(input);
-    println!("Part 1: {pt1}");
-    let pt2 = part_2(input);
-    println!("Part 2: {pt2}");
-}
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 struct Range {
     min: usize,
     max: usize,
@@ -33,24 +25,29 @@ fn parse_input(input: &str) -> (Vec<Range>, Vec<usize>) {
     (ranges, numbers)
 }
 
+fn main() {
+    let input: &str = include_str!("./day05.txt");
+    let pt1 = part_1(input);
+    println!("Part 1: {pt1}");
+    let pt2 = part_2(input);
+    println!("Part 2: {pt2}");
+}
+
 fn part_1(input: &str) -> usize {
-    let mut count = 0;
     let (ranges, numbers) = parse_input(input);
 
-    for number in numbers {
-        for range in &ranges {
-            if number >= range.min && number <= range.max {
-                count += 1;
-                break;
-            }
-        }
-    }
-
-    count
+    numbers
+        .into_iter()
+        .filter(|number| {
+            ranges
+                .clone()
+                .into_iter()
+                .any(|range| *number >= range.min && *number <= range.max)
+        })
+        .count()
 }
 
 fn part_2(input: &str) -> usize {
-    let mut count = 0;
     let (mut ranges, _) = parse_input(input);
     let mut condensed_ranges = ranges.clone();
 
@@ -58,11 +55,9 @@ fn part_2(input: &str) -> usize {
         condensed_ranges = condense(range, condensed_ranges);
     }
 
-    for range in condensed_ranges {
-        count += range.max - range.min + 1;
-    }
-
-    count
+    condensed_ranges
+        .into_iter()
+        .fold(0, |acc, range: Range| acc + range.max - range.min + 1)
 }
 
 fn condense(range: Range, ranges: Vec<Range>) -> Vec<Range> {
@@ -83,10 +78,7 @@ fn condense(range: Range, ranges: Vec<Range>) -> Vec<Range> {
 }
 
 fn overlap(left: &Range, right: &Range) -> bool {
-    if left.max < right.min || left.min > right.max {
-        return false;
-    }
-    true
+    !(left.max < right.min || left.min > right.max)
 }
 
 fn highest(left: usize, right: usize) -> usize {
