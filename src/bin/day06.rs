@@ -24,8 +24,8 @@ fn part_1(input: &str) -> usize {
         let num_seq = seq.into_iter().map(|num| num.parse::<usize>().unwrap());
 
         total += match operator {
-            "+" => num_seq.fold(0, |acc, num| acc + num),
-            "*" => num_seq.fold(1, |acc, num| acc * num),
+            "+" => num_seq.sum(),
+            "*" => num_seq.product::<usize>(),
             _ => panic!("You got some weird operator"),
         }
     }
@@ -34,7 +34,6 @@ fn part_1(input: &str) -> usize {
 }
 
 fn part_2(input: &str) -> usize {
-
     // Rotate puzzle
     let mut puzzle: Vec<Vec<char>> = vec![];
     for (y, line) in input.lines().enumerate() {
@@ -47,23 +46,28 @@ fn part_2(input: &str) -> usize {
         }
     }
 
-    // Gross String to &str to usize
+    // Gross Vec<char> to String to &str to usize
     let mut num_seq: Vec<usize> = vec![];
     let mut total = 0;
     for line in puzzle {
         let mut line_string: String = line.into_iter().collect();
 
-        if line_string.contains('+') || line_string.contains('*') {
+        // Operator at end of last number in sequence
+        if line_string.ends_with('+') || line_string.ends_with('*') {
             let operator = line_string.pop().unwrap();
-            num_seq.push(*&line_string.trim().parse::<usize>().unwrap());
+            let number = &line_string.trim().parse::<usize>().unwrap();
+            num_seq.push(*number);
+
             total += match operator {
-                '+' => num_seq.into_iter().fold(0, |acc, num| acc + num),
-                '*' => num_seq.into_iter().fold(1, |acc, num| acc * num),
+                '+' => num_seq.into_iter().sum(),
+                '*' => num_seq.into_iter().product::<usize>(),
                 _ => panic!("You got some weird operator"),
             };
+
             num_seq = vec![];
         } else if !line_string.trim().is_empty() {
-            num_seq.push(*&line_string.trim().parse::<usize>().unwrap());
+            let number = &line_string.trim().parse::<usize>().unwrap();
+            num_seq.push(*number);
         }
     }
 
