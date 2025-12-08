@@ -54,7 +54,8 @@ fn turn(direction: char, start: usize, distance: usize) -> (usize, usize) {
                 return (dial, turns);
             } else {
                 let dial = start - rem;
-                let turns = (distance / 100) + (dial == 0) as usize;
+                // add 1 if we end on 0
+                let turns = distance / 100 + (dial == 0) as usize;
                 return (dial, turns);
             }
         }
