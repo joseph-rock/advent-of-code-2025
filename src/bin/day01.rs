@@ -46,22 +46,17 @@ fn turn(direction: char, start: usize, distance: usize) -> (usize, usize) {
             return (dial, turns);
         }
         'L' => {
-            let mut turns = 0;
-            let mut dial = 0;
             let rem = distance % 100;
-
             if rem > start {
-                dial = 100 - (rem - start);
-                if start != 0 {
-                    turns += 1;
-                }
-                turns += distance / 100;
+                let dial = 100 - (rem - start);
+                // maybe too clever - if we start at 0 then we don't want to add 1
+                let turns = distance / 100 + (start != 0) as usize;
+                return (dial, turns);
             } else {
-                dial = start - rem;
-                turns += (distance / 100) + (dial == 0) as usize;
+                let dial = start - rem;
+                let turns = (distance / 100) + (dial == 0) as usize;
+                return (dial, turns);
             }
-
-            return (dial, turns);
         }
         _ => panic!("bad direction in turn()"),
     }
